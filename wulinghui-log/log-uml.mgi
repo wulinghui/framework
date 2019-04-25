@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass name="com.wlh.log.LogUUID" x="156" y="493">
+        <Extension destinationClassName="com.wlh.log.LoggerAdapt"/>
+    </CommunicationClass>
+    <CommunicationClass name="com.wlh.log.LoggerAdapt" x="25" y="324">
+        <Extension destinationClassName="com.wlh.log.ILogger"/>
+        <Association destinationClassName="com.wlh.log.ILogger"
+            endpointName="iLogger" kind="Simple"/>
+        <Communication destinationClassName="com.wlh.log.ILogger"/>
+    </CommunicationClass>
+    <CommunicationClass name="com.wlh.log.LogStore" x="210" y="386">
+        <Extension destinationClassName="com.wlh.log.LoggerAdapt"/>
+        <Association destinationClassName="com.wlh.log.ILogger"
+            endpointName="iLoggerStore" kind="Simple"/>
+        <Communication destinationClassName="com.wlh.log.ILogger"/>
+    </CommunicationClass>
+    <CommunicationClass name="com.wlh.log.LogBase" x="386" y="338">
+        <Extension destinationClassName="com.wlh.log.ILogger"/>
+    </CommunicationClass>
+    <CommunicationClass name="com.wlh.log.LogUpLevelFactory" x="669" y="264">
+        <Extension destinationClassName="com.wlh.log.ILogFactory"/>
+    </CommunicationClass>
+    <CommunicationClass name="com.wlh.log.LogUpLevel" x="553" y="387">
+        <Extension destinationClassName="com.wlh.log.LoggerAdapt"/>
+    </CommunicationClass>
+    <CommunicationClass name="com.wlh.log.ILogger" x="214" y="106"/>
+    <CommunicationClass name="com.wlh.log.ILogFactory" x="701" y="145"/>
+</ClassDiagram>
