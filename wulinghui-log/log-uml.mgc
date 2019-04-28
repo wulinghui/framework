@@ -36,6 +36,16 @@
             endpointName="iLoggerStore" kind="Simple"/>
         <Communication destinationClassName="com.wlh.log.ILogger"/>
     </Class>
+    <Class name="com.wlh.log.LogMSG" x="683" y="88">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="com.wlh.log.ILogFactory"/>
+    </Class>
     <Class name="com.wlh.log.LogBase" x="481" y="194">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"

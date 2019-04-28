@@ -30,18 +30,33 @@ public class Slf4jDemo {
 	        log.error("error");
 	}
     @Test
-	public void runLogUpLevelFactory(){   
-    	LogUpLevelFactory factory = new LogUpLevelFactory();
-    	ILogger newLogger = factory.newLogger();
-    	newLogger.trace("wode {}","wlh"); 
-    	// 提升等级
-    	LogUpLevel.THREAD_LOCAL = new ThreadLocal<>();
-    	LogUUID.THREAD_LOCAL = new ThreadLocal<>();
-    	Map value = new HashMap<>();
-    	value.put(LogUpLevel.FLAG, LogUpLevel.WARN);
-    	value.put(LogUUID.FLAG, LogUpLevel.WARN + "\tuuid\t");
-		LogUpLevel.THREAD_LOCAL.set(value );
-		LogUUID.THREAD_LOCAL.set(value); 
-    	newLogger.trace("wode {}","wlh");  
-	}
+   	public void runLogUpLevelFactory(){   
+       	LogUpLevelFactory factory = new LogUpLevelFactory();
+       	ILogger newLogger = factory.newLogger();
+       	newLogger.trace("wode {}","wlh"); 
+       	// 提升等级
+       	LogUpLevel.THREAD_LOCAL = new ThreadLocal<>();
+       	LogUUID.THREAD_LOCAL = new ThreadLocal<>();
+       	Map value = new HashMap<>();
+       	value.put(LogUpLevel.FLAG, LogUpLevel.WARN);
+       	value.put(LogUUID.FLAG, LogUpLevel.WARN + "\tuuid\t");
+   		LogUpLevel.THREAD_LOCAL.set(value );
+   		LogUUID.THREAD_LOCAL.set(value); 
+       	newLogger.trace("wode {}","wlh");  
+   	}
+    @Test
+   	public void runLogUpLevelFactoryByLogMSG(){   
+       	ILogger newLogger = LogMSG.getLogger();
+       	newLogger.debug(newLogger.getName()); 
+       	newLogger.trace("wode {}","wlh"); 
+       	// 提升等级
+       	LogUpLevel.THREAD_LOCAL = new ThreadLocal<>();
+       	LogUUID.THREAD_LOCAL = new ThreadLocal<>();
+       	Map value = new HashMap<>();
+       	value.put(LogUpLevel.FLAG, LogUpLevel.WARN);
+       	value.put(LogUUID.FLAG, LogUpLevel.WARN + "\tuuid\t");
+   		LogUpLevel.THREAD_LOCAL.set(value );
+   		LogUUID.THREAD_LOCAL.set(value); 
+       	newLogger.trace("wode {}","wlh");  
+   	}
 }	
