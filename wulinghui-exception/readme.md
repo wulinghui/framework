@@ -3,6 +3,7 @@
    - 接口定义了一个返回类型，实现类需要多个返回类型时.  
    ```
                  可以使用RuntimeException,包装一个返回值。上层捕获异常获得。
+                 当然也可以使用TreadLocal，但是这样容易内存泄漏。
           @see com.wlh.exception.ReturnException       
    ```              
    - 实现接口需要做异常适配的时候，
