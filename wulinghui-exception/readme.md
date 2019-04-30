@@ -28,3 +28,5 @@
    	@see com.wlh.exception.SysErrDemo
    	详见http://www.cnblogs.com/iwinson/p/6075287.html
    ```
+
+### 无依赖

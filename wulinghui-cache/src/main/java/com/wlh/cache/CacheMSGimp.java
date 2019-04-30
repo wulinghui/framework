@@ -1,19 +1,12 @@
 package com.wlh.cache;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
-import javax.cache.configuration.CacheEntryListenerConfiguration;
 import javax.cache.configuration.Configuration;
-import javax.cache.integration.CompletionListener;
-import javax.cache.processor.EntryProcessor;
-import javax.cache.processor.EntryProcessorException;
-import javax.cache.processor.EntryProcessorResult;
 import javax.cache.spi.CachingProvider;
 
 /**
@@ -21,7 +14,11 @@ import javax.cache.spi.CachingProvider;
  * 以配置为主，可以生成多个库的多个实例。
  * @param <K>
  * @param <V>
+ * @Deprecated
+ * @see com.wlh.cache.CacheMsgIoc<K, V>
+ * Map不失效，没有Ioc管理CacheMSGimp对象。
  */
+@Deprecated
 public class CacheMSGimp<K, V> implements ICacheMSG<K, V> {
 	Configuration<K, V> config;
 	String defaultCacheName;

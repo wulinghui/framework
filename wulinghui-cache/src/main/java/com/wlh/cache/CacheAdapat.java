@@ -1,5 +1,6 @@
 package com.wlh.cache;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -15,8 +16,8 @@ import javax.cache.processor.EntryProcessor;
 import javax.cache.processor.EntryProcessorException;
 import javax.cache.processor.EntryProcessorResult;
 
-public class CacheAdapat<K, V> implements Cache<K, V> {
-	protected Cache<K, V> cache;
+public class CacheAdapat<K, V> implements Cache<K, V> ,Serializable {
+	protected transient Cache<K, V> cache;
 	public CacheAdapat(Cache<K, V> cache) {
 		super();
 		this.cache = cache;

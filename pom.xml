@@ -10,11 +10,15 @@
   	<dependency>
   			<groupId>junit</groupId>
   			<artifactId>junit</artifactId>      
-  			<version>4.0</version>  
-  		</dependency>
+  			<version>4.12</version> 
+  		</dependency>         
   </dependencies>
   <modules>
-  	<module>wulinghui-log</module>  
+  	<module>wulinghui-log</module>
+  	<module>wulinghui-config</module>
+  	<module>wulinghui-cache</module>
+  	<module>wulinghui-exception</module>
+  	<module>wulinghui-beanUtils</module>
   </modules>  
   <build>          
 		<plugins>  
