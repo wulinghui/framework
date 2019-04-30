@@ -1,5 +1,6 @@
 package com.wlh.config.apache;
 
+import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.builder.BasicBuilderProperties;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 
@@ -17,7 +18,7 @@ public abstract class SystemBuilderConfigFactory {
 			t.setLogger(new ConfigLogger(LogMSG.getLogger()));
 			t.setThrowExceptionOnMissing(true);
 			t.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
-//			t.setBeanHelper(beanHelper); // TODO 将来需要和IOC容器整理。
+			t.setBeanHelper(new BeanHelper()); // TODO 将来需要和IOC容器整理。
 	}
 	
 	public static final <T extends BasicBuilderProperties> T wrapConfig(T t){

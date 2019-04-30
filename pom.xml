@@ -19,6 +19,7 @@
   	<module>wulinghui-cache</module>
   	<module>wulinghui-exception</module>
   	<module>wulinghui-beanUtils</module>
+  	<module>wulinghui-ioc</module>
   </modules>  
   <build>          
 		<plugins>  
