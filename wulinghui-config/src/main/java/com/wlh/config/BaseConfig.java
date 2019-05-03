@@ -38,15 +38,19 @@ public class BaseConfig implements IConfig {
 	}
 	@Override
 	public <T> T getSingle(Class<T> cls) {
-		return get(cls, SINGLE_FLAG_UUID+cls.getName());
+		return get(cls, getSingleKey(cls));
+	}
+	public static String getSingleKey(Class<?> cls) {
+		return SINGLE_FLAG_UUID+cls.getName();
 	}
 	@Override
-	public void addSingle(Class<?> cls, Object value) {
-		abstractConfiguration.addProperty(SINGLE_FLAG_UUID+cls.getName(), value);
+	public void setSingle(Class<?> cls, Object value) {
+//		abstractConfiguration.addProperty(getSingleKey(cls), value);
+		abstractConfiguration.setProperty(getSingleKey(cls), value);
 	}
 	@Override
-	public <T> void addSingle(Object value) {
-		addSingle(value.getClass(), value);
+	public <T> void setSingle(Object value) {
+		setSingle(value.getClass(), value);
 	} 
 	
 	///////////////////////////////////////////////////////

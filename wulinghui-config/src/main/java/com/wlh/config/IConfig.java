@@ -22,8 +22,8 @@ public interface IConfig {
 	//
 	//   addProperty(value.getClass().getName,value);就行了。有时候是父类需要单例。
 	//
-	public abstract void addSingle(Class<?> cls, Object value);
-	public abstract <T> void addSingle(Object value);
+	public abstract void setSingle(Class<?> cls, Object value);
+	public abstract <T> void setSingle(Object value);
 	public abstract void addProperty(String key, Object value);
 
 	public abstract Configuration subset(String prefix);

@@ -47,7 +47,9 @@ public abstract class SystemConfig {
 		} catch (ConfigurationException e) {
 			throw new ConvertRunException(e);
 		}
-		systemConfig = new BaseConfig(abstractConfiguration);
+//		systemConfig = new BaseConfig(abstractConfiguration);
+//		systemConfig = new WrapClassConfig(  new BaseConfig(abstractConfiguration) ) ;
+		systemConfig = new WrapClassConfig2(  new BaseConfig(abstractConfiguration) ) ;
 	}
 //	static{
 		// TODO 这个对于每个类加载器都是独立的,但是内存消耗太大,我们这里先采用上面的方式。

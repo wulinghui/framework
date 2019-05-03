@@ -147,12 +147,12 @@ public class ConfigAdpat implements IConfig{
 		config.append(c);
 	}
 
-	public void addSingle(Class<?> cls, Object value) {
-		config.addSingle(cls, value);
+	public void setSingle(Class<?> cls, Object value) {
+		config.setSingle(cls, value);
 	}
 
-	public <T> void addSingle(Object value) {
-		config.addSingle(value);
+	public <T> void setSingle(Object value) {
+		config.setSingle(value);
 	}
 
 	@Override
