@@ -70,7 +70,6 @@ public abstract class AbstractBeanFactory implements BeanFactory{
 				+ ((thisClass == null) ? 0 : thisClass.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -87,4 +86,9 @@ public abstract class AbstractBeanFactory implements BeanFactory{
 			return false;
 		return true;
 	}
+
+	public String getScopeFlag(BeanBuildContext bcc) throws RuntimeException {
+		return PROTOTYPE;
+	}
+	
 }

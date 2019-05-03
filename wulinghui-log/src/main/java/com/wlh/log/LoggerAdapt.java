@@ -89,5 +89,25 @@ public class LoggerAdapt implements ILogger{
 	public boolean warn(String arg0) {
 		return iLogger.warn(arg0);
 	}
+
+	public boolean debug(Throwable arg1) {
+		return iLogger.debug(arg1);
+	}
+
+	public boolean error(Throwable arg1) {
+		return iLogger.error(arg1);
+	}
+
+	public boolean info(Throwable arg1) {
+		return iLogger.info(arg1);
+	}
+
+	public boolean trace(Throwable arg1) {
+		return iLogger.trace(arg1);
+	}
+
+	public boolean warn(Throwable arg1) {
+		return iLogger.warn(arg1);
+	}
 	
 }

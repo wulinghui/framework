@@ -5,7 +5,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.wlh.log.ILogger;
+import com.wlh.log.LogMSG;
+
 public class AbstractBeanFactoryManage implements BeanFactoryManage {
+	
+	public static ILogger logger = LogMSG.getLogger();
 	/*
 	 *  保证put进去的顺序。
 	 *  为了更好的利用AbstractBeanFactory的getLevel()方法
@@ -13,7 +18,6 @@ public class AbstractBeanFactoryManage implements BeanFactoryManage {
 	Map<String,BeanFactory> map =  new LinkedHashMap<>();   // new Hashtable<>();
 	@Override
 	public Map<String,BeanFactory> getAllFactory() {
-		
 		return new LinkedHashMap<>(map);
 	}
 
@@ -21,6 +25,10 @@ public class AbstractBeanFactoryManage implements BeanFactoryManage {
 	public synchronized boolean  setBeanFactory(String name,BeanFactory factory) {
 		 map.put(name, factory);
 		 return true;
+	}
+	@Override
+	public boolean setBeanFactory(BeanFactory factory) {
+		return setBeanFactory(factory.getClass().getName() , factory);
 	}
 
 	@Override
@@ -74,10 +82,24 @@ public class AbstractBeanFactoryManage implements BeanFactoryManage {
 	}
 	protected Object getBean(String name,  Class<?> typeToMatch ,Object... args)  {
 		BeanBuildContext bcc = newBeanBuildContext(name, typeToMatch, args);
-		
-		BeanFactory lookupBeanFactory = lookupBeanFactory(bcc); 
-		
-		return lookupBeanFactory.createBean(bcc);
+		Object createBean = null;
+		BeanFactory lookupBeanFactory = null;
+		do{
+			try {
+				lookupBeanFactory = lookupBeanFactory(bcc); 
+				
+				createBean = lookupBeanFactory.createBean(bcc);
+				if(createBean != null ){
+					//从bcc里面移除当前的BeanFactory。
+					AbstractBeanFactory.getAllFactoryNotMyself(lookupBeanFactory, bcc);
+					break;
+				}
+			} catch (RuntimeException e) {
+				logger.warn("lookupBeanFactory.createBean(bcc)有异常"+lookupBeanFactory , e);
+			}
+		}while(true);
+		 
+		 return createBean;
 	}
 
 	protected BeanBuildContext newBeanBuildContext(String name,
@@ -96,6 +118,7 @@ public class AbstractBeanFactoryManage implements BeanFactoryManage {
 				max = level2;
 				returnFactory = beanFactory;
 				bcc.setFactoryName(element.getKey());
+				if( level2 == BeanFactory.MAX_LEVEL) break;
 			}
 		}
 		return returnFactory;
@@ -104,6 +127,7 @@ public class AbstractBeanFactoryManage implements BeanFactoryManage {
 	public boolean isTypeMatch(String name, Class<?> typeToMatch) {
 		return typeToMatch.isAssignableFrom(getType(name));
 	}
+
 
 //	public static void main(String[] args) {
 //		boolean assignableFrom = Object.class.isAssignableFrom(AbstractBeanFactoryManage.class);

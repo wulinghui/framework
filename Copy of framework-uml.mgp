@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PackageAnalysis>
+    <Package name="com.wlh.config" x="19" y="439">
+        <DependencyLink destination="com.wlh.cache"/>
+        <DependencyLink destination="com.wlh.config.apache"/>
+        <DependencyLink destination="com.wlh.exception"/>
+        <DependencyLink destination="com.wlh.log"/>
+    </Package>
+    <Package name="com.wlh.config.apache" x="454" y="540">
+        <DependencyLink destination="com.wlh.convert"/>
+        <DependencyLink destination="com.wlh.log"/>
+    </Package>
+    <Package name="com.wlh.log" x="314" y="539"/>
+    <Package name="com.wlh.cache" x="165" y="536"/>
+    <Package name="com.wlh.beanutils" x="45" y="586"/>
+    <Package name="com.wlh.convert" x="247" y="587"/>
+    <Package name="com.wlh.exception" x="-12" y="535"/>
+</PackageAnalysis>

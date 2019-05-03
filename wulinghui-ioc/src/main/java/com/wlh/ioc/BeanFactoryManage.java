@@ -6,6 +6,7 @@ public interface BeanFactoryManage {
 //	Collection<BeanFactory> getAllFactory(); 之后可能需要用到
 	Map<String,BeanFactory> getAllFactory();
 	boolean setBeanFactory(String name,BeanFactory factory);
+	boolean setBeanFactory(BeanFactory factory);
 	
 	Object getBean(String name) throws RuntimeException;
 	<T> T getBean(String name, Class<T> requiredType) throws RuntimeException;

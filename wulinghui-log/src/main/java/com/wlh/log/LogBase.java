@@ -208,6 +208,35 @@ public class LogBase implements ILogger {
 		log.warn(arg0);
 		return isWarnEnabled();
 	}
-	
+
+
+	@Override
+	public boolean debug(Throwable arg1) {
+		return debug("",arg1);
+	}
+
+
+	@Override
+	public boolean error(Throwable arg1) {
+		return error("",arg1);
+	}
+
+
+	@Override
+	public boolean info(Throwable arg1) {
+		return info("",arg1);
+	}
+
+
+	@Override
+	public boolean trace(Throwable arg1) {
+		return trace("",arg1);
+	}
+
+
+	@Override
+	public boolean warn(Throwable arg1) {
+		return warn("",arg1);
+	}
     
 }

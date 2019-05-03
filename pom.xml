@@ -20,6 +20,8 @@
   	<module>wulinghui-exception</module>
   	<module>wulinghui-beanUtils</module>
   	<module>wulinghui-ioc</module>
+  	<module>wulinghui-aop</module>
+  	<module>wulinghui-util</module>
   </modules>  
   <build>          
 		<plugins>  

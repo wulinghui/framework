@@ -2,6 +2,7 @@ package com.wlh.ioc;
 
 import java.util.Map;
 
+
 //import com.wlh.config.SystemConfig;
 import com.wlh.config.WrapEntity;
 
@@ -17,6 +18,9 @@ public  abstract class IocManage {
 //	static{
 //		SystemConfig.get().setSingle(BeanFactoryManage.class, new AbstractBeanFactoryManage());
 //	}
+	public static boolean setBeanFactory(BeanFactory factory) {
+		return beanFactoryManage.getWrapObj().setBeanFactory( factory 	);
+	}
 	public  static Map<String,BeanFactory> getAllFactory() {
 		return beanFactoryManage.getWrapObj().getAllFactory();
 	}

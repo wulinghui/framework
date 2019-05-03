@@ -11,7 +11,7 @@ public interface BeanFactory {
 	String REQUEST = "request";
 	String SESSION = "session";
 	String GLOBAL_SESSION = "global Session";
-	
+	int MAX_LEVEL = 999999999;
 	int getLevel(BeanBuildContext bcc);
 	
 	Object createBean(BeanBuildContext bcc) throws RuntimeException;
