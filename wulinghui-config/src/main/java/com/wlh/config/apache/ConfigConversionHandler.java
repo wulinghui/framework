@@ -13,11 +13,13 @@ public class ConfigConversionHandler extends DefaultConversionHandler {
 	@Override
 	protected <T> T convertValue(Object src, Class<T> targetCls,
 			ConfigurationInterpolator ci) {
-		
 		try {
 			return super.convertValue(src, targetCls, ci);
 		} catch (Exception e) {
 			return (T) ConvertUtils.convert(src, targetCls);
 		}
 	}
+	
+	
+	
 }

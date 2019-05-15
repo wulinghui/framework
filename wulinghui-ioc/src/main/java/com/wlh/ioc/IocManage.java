@@ -3,8 +3,25 @@ package com.wlh.ioc;
 import java.util.Map;
 
 
+
+
+
+
+
+
+import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.beanutils.BeanHelper;
+
+
+
+
+
+import com.wlh.config.SystemConfig;
 //import com.wlh.config.SystemConfig;
 import com.wlh.config.WrapEntity;
+import com.wlh.config.apache.SystemBuilderConfigFactory;
+import com.wlh.ioc.apache.BeanFactory;
 
 /**
  * @author wulinghui
@@ -13,11 +30,18 @@ import com.wlh.config.WrapEntity;
  * `SystemConfig.get().setSingle(BeanFactoryManage.class, new AbstractBeanFactoryManage());`
  */
 public  abstract class IocManage {
-	private static WrapEntity<BeanFactoryManage> beanFactoryManage = new WrapEntity<BeanFactoryManage>(new AbstractBeanFactoryManage()).putSystemConfig();
+	private final static WrapEntity<BeanFactoryManage> beanFactoryManage = WrapEntity.getWrapEntityBySystemConfig(BeanFactoryManage.class);
 	IocManage(){}
 //	static{
 //		SystemConfig.get().setSingle(BeanFactoryManage.class, new AbstractBeanFactoryManage());
 //	}
+	static{
+		if( beanFactoryManage.isEmpty() ){
+			BeanHelper beanHelper = SystemBuilderConfigFactory.getBeanHelper();
+			AbstractBeanFactoryManage abstractBeanFactoryManage = new AbstractBeanFactoryManage(beanHelper);
+			beanFactoryManage.setWrapObj(abstractBeanFactoryManage);
+		}
+	}
 	public static boolean setBeanFactory(BeanFactory factory) {
 		return beanFactoryManage.getWrapObj().setBeanFactory( factory 	);
 	}

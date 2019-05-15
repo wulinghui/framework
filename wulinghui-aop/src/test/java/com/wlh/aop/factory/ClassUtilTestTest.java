@@ -1,10 +1,21 @@
 package com.wlh.aop.factory;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassPathUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.junit.Test;
+
+import com.wlh.aop.entity.TestA;
+import com.wlh.ioc.IocManage;
+import com.wlh.ioc.ReflectBeanFactory;
+import com.wlh.ioc.apache.BeanFactory;
+import com.wlh.util.ClassHelper;
 
 public class ClassUtilTestTest {
 	ClassUtils claUtil = new ClassUtils();
@@ -50,27 +61,54 @@ public class ClassUtilTestTest {
 
 	@Test
 	public final void testGetSimpleNameObjectString() {
-		fail("Not yet implemented"); // TODO
+		CacheFactory cacheFactory = new CacheFactory( new IocFactory(new ReflectBeanFactory() ) );
+		IocManage.setBeanFactory(cacheFactory);
+		Map<String,BeanFactory> map =  new LinkedHashMap<>();
+//		com.wlh.aop.factory.Test bean = (com.wlh.aop.factory.Test) cacheFactory.createBean(new BeanBuildContextImp(null, com.wlh.aop.factory.Test.class, null,map  ));
+		com.wlh.aop.factory.TestFactory bean  = IocManage.getBean(TestFactory.class);;
+		System.out.println(bean); 
 	}
 
 	@Test
 	public final void testGetPackageNameObjectString() {
-		fail("Not yet implemented"); // TODO
+		Map bean = IocManage.getBean(Map.class,JavaUtilFactory.SELECT_OF_METHOD);
+		System.out.println(bean); 
 	}
 
 	@Test
 	public final void testGetPackageNameClassOfQ() {
-		fail("Not yet implemented"); // TODO
+		CacheFactory cacheFactory = new CacheFactory((new ReflectBeanFactory() ) );
+		IocManage.setBeanFactory(cacheFactory);
+		TestFactory bean  = IocManage.getBean(TestFactory.class);
+		System.out.println(bean); 
 	}
 
 	@Test
-	public final void testGetPackageNameString() {
-		fail("Not yet implemented"); // TODO
+	public final void testGetPackageNameString() throws Throwable, IllegalAccessException {
+//		(new ReflectBeanFactory() )
+		String basePackageNama = "com.wlh.aop.entity";
+		Set<Class<?>> classSet = ClassHelper.getClassSet(basePackageNama);
+		CacheFactory cacheFactory = new CacheFactory( new AopFactory(basePackageNama ) );
+		IocManage.setBeanFactory(cacheFactory);
+		TestA bean  = IocManage.getBean(TestA.class);
+		System.out.println(bean.getClass()); 
+		bean.aaa(); 
+		TestA newInstance = bean.getClass().newInstance();
+		newInstance.aaa();  
+		System.out.println(classSet); 
 	}
 
 	@Test
 	public final void testGetAbbreviatedNameClassOfQInt() {
-		fail("Not yet implemented"); // TODO
+		System.out.println(int.class.isPrimitive());
+		System.out.println(boolean.class.isPrimitive());
+		System.out.println(Boolean.class.isPrimitive());
+		//判断是不是包装类
+		System.out.println(ClassUtils.isPrimitiveWrapper(boolean.class));
+		System.out.println(ClassUtils.isPrimitiveWrapper(Boolean.class));
+		//判断是不是基本类和包装类
+		System.out.println(ClassUtils.isPrimitiveOrWrapper(boolean.class));
+		System.out.println(ClassUtils.isPrimitiveOrWrapper(Boolean.class));
 	}
 
 	@Test

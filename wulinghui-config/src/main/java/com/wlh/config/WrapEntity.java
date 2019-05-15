@@ -45,4 +45,30 @@ public class WrapEntity<T> implements Serializable,Cloneable {
 		SystemConfig.get().setSingle( this );
 		return this;
 	}
+	/**为了能使属性变成final
+	 * @param cls
+	 * @return
+	 */
+	public static <T> WrapEntity<T> getWrapEntityBySystemConfig(Class<T> cls){
+		String singleKey = BaseConfig.getSingleKey(cls);
+		return getWrapEntityBySystemConfig(singleKey);
+	}
+
+	public static  WrapEntity getWrapEntityBySystemConfig(String singleKey) {
+		IConfig iConfig = SystemConfig.get();
+		Object property = iConfig.getProperty(singleKey);
+		if(property == null || !( property instanceof WrapEntity) ){
+			synchronized(iConfig){
+				property = iConfig.getProperty(singleKey);
+				if(property == null || !( property instanceof WrapEntity) ){
+					property = new WrapEntity(property);
+					iConfig.addProperty(singleKey, property);
+				}
+			}
+		}
+		return  (WrapEntity) property;
+	}
+	public boolean isEmpty(){
+		return wrapObj == null;
+	}
 }

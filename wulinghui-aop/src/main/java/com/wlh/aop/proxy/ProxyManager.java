@@ -7,6 +7,7 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
+import com.wlh.aop.entity.TestA;
 import com.wlh.config.WrapEntity;
 
 /**
@@ -19,7 +20,8 @@ public abstract class ProxyManager {
 	private static WrapEntity<IProxyManager> entity = new WrapEntity<IProxyManager>(new IProxyManager(){
 		
 		public  <T> T createProxy(final Class<?> targetClass, final List<Proxy> proxyList) {
-//	    	Enhancer enhancer = new Enhancer();
+	    	Enhancer enhancer = new Enhancer();
+	    	
 //	    	enhancer.setCallback(callback);
 //	    	enhancer.create();
 	    	//静态方法创建代理对象。
@@ -30,11 +32,26 @@ public abstract class ProxyManager {
 	            }
 	        });
 	    }
-		
 	}).putSystemConfig();
     
 	
 	public static <T> T createProxy(final Class<?> targetClass, final List<Proxy> proxyList) {
 		return entity.getWrapObj().createProxy(targetClass, proxyList);
+	}
+	public static Class<?> getProxyClass(final Class<?> targetClass, final List<Proxy> proxyList) {
+//		return entity.getWrapObj().createProxy(targetClass, proxyList).getClass();
+		Class<? extends Object> class1 = entity.getWrapObj().createProxy(targetClass, proxyList).getClass();
+		Object newInstance = null;
+		try {
+			newInstance = class1.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (newInstance instanceof TestA) {
+			TestA new_name = (TestA) newInstance;
+			new_name.aaa();
+		}
+		return class1;
 	}
 }

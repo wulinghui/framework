@@ -7,6 +7,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 
+import com.wlh.ioc.apache.BeanFactory;
+
 public class SpringIocTest {
 	ClassPathXmlApplicationContext aContext;
 

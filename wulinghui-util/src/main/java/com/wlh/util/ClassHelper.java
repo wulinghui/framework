@@ -3,6 +3,8 @@ package com.wlh.util;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
@@ -20,7 +22,26 @@ import com.wlh.log.LogMSG;
 public class ClassHelper {
 	
 	public static ILogger logger = LogMSG.getLogger();
-	
+	/** 获得类在父类上实现的泛型。自己在强转一下。 
+	 * cn.wlh.util.base.ClassUtilTest.getClassArguments()
+	 * @param cla 类。
+	 * @return
+	 */
+	public static Type[] getClassArgumentsOfSuper(Class<?> cla) {
+		Class<?> claSuper = cla;
+		Type genericSuperclass = claSuper.getGenericSuperclass();
+		ParameterizedType parameterizedType = null;
+		while(  true ) {
+			if(genericSuperclass instanceof ParameterizedType) {
+				parameterizedType = (ParameterizedType) genericSuperclass;
+				break;//
+			}else {
+				claSuper = claSuper.getSuperclass();
+				genericSuperclass = claSuper.getGenericSuperclass();
+			}
+		}
+		return parameterizedType.getActualTypeArguments();
+	}
     /**
      * 获取类加载器
      */

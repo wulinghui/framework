@@ -7,16 +7,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.configuration2.beanutils.BeanCreationContext;
+
 import com.wlh.aop.proxy.Proxy;
 import com.wlh.aop.proxy.ProxyManager;
 import com.wlh.exception.ConvertRunException;
 import com.wlh.ioc.AbstractBeanFactory;
-import com.wlh.ioc.BeanBuildContext;
-import com.wlh.ioc.IocManage;
+import com.wlh.ioc.BeanEntity;
+import com.wlh.ioc.apache.BeanDeclaration;
+import com.wlh.log.ILogger;
+import com.wlh.log.LogMSG;
 import com.wlh.util.ClassHelper;
 
+/**
+ * @author wulinghui
+ * 和ReflectBeanFactory是同级的。
+ */
 public class AopFactory extends AbstractBeanFactory{
-	private final Map<Class<?>, Object> BEAN_MAP =  IocManage.getBean(Map.class,JavaUtilFactory.SELECT_OF_FIELD);
+	private static ILogger logger = LogMSG.getLogger();
 	private final Set<Class<?>> CLASS_SET;
 	private Map<Class<?>, List<Proxy>> targetMap;
 	/**
@@ -28,7 +36,7 @@ public class AopFactory extends AbstractBeanFactory{
 	/**
 	 * @param cLASS_SET 从set里面找代理和被代理类。
 	 */
-	public AopFactory(Set<Class<?>> cLASS_SET) {
+	public AopFactory(Set<Class<?>> cLASS_SET ) {
 		CLASS_SET = cLASS_SET;
 		init();
 	}
@@ -45,12 +53,11 @@ public class AopFactory extends AbstractBeanFactory{
 					List<Proxy> proxyList = targetEntry.getValue();
 					//这里报错，就不放入Map里面了。
 					Object proxy = ProxyManager.createProxy(targetClass, proxyList);
-					//目标类为key，.
-					BEAN_MAP.put(targetClass, proxy);
 				} catch (Throwable e) { 
-					
+					logger.warn(e);
 				}
             }
+          
         } catch (Exception e) {
             throw new ConvertRunException(e);
         }
@@ -107,36 +114,44 @@ public class AopFactory extends AbstractBeanFactory{
         return targetMap;
     }
 
-    /**单例代理对象。无属性
-	 */
-//	public <T> T getInstance(Class<T> key, Object[] pars) {
-    public Object getInstance(Class<?> key) {
-		return BEAN_MAP.get(key);
-	}
-    /**新new代理对象。无属性
-	 */
-    public Object newInstance(Class<?> targetClass) {
-    	return ProxyManager.createProxy(targetClass, this.targetMap.get(targetClass) );
-    }
+   
     
-	/**
-	 * @return the bEAN_MAP
-	 */
-	public Map<Class<?>, Object> getBEAN_MAP() {
-		return BEAN_MAP;
-	}
 	/**如果CLASS_SET被更改后建议再手动调用init方法同步Map;
 	 * @return the cLASS_SET
 	 */
 	public Set<Class<?>> getCLASS_SET() {
 		return CLASS_SET;
 	}
+//	@Override
+//	public Object createBean(BeanBuildContext bcc) throws RuntimeException {
+//		Class targetClass = bcc.getBeanClass();
+//		targetClass= ProxyManager.getProxyClass(targetClass , this.targetMap.get(targetClass) );
+//		BeanBuildContextImp beanBuildContextImp = new BeanBuildContextImp(bcc.getBeanName(), targetClass, bcc.getParameter(), bcc.getAllFactory());
+//		return beanFactory.createBean(beanBuildContextImp);
+//	}
 	@Override
-	public Object createBean(BeanBuildContext bcc) throws RuntimeException {
-		return newInstance(bcc.getBeanClass());
+	 /**新new代理对象。无属性
+		 */
+	public Object createBean0(BeanCreationContext bcc,
+			BeanDeclaration beandel, BeanEntity beanFactoryParameter)
+			throws Exception {
+		Class targetClass = beanFactoryParameter.getTypeToMatch();
+		return ProxyManager.createProxy(targetClass, this.targetMap.get(targetClass));
+//		if (createProxy instanceof TestA) {
+//			TestA new_nam1 = (TestA) createProxy;
+//			new_nam1.aaa();
+//		}
+//		targetClass= ProxyManager.getProxyClass(targetClass , this.targetMap.get(targetClass) );
+//		if (beandel instanceof BeanDeclarationImp) {
+//			BeanDeclarationImp new_name = (BeanDeclarationImp) beandel;
+//			new_name.setBeanClassName(targetClass);
+//			beanFactoryParameter.setTypeToMatch(targetClass); 
+//		}
+//		return beanFactory.createBean0(bcc, beandel, beanFactoryParameter);
 	}
 	@Override
-	public String getScopeFlag(BeanBuildContext bcc) throws RuntimeException {
-		return SINGLETON;
+	public String getScopeFlag0(BeanDeclaration beandel,
+			BeanEntity beanFactoryParameter) throws RuntimeException {
+		return beandel.PROTOTYPE;
 	}
 }

@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ClassDiagram>
-    <Class name="com.wlh.aop.proxy.Proxy" x="215" y="41">
+    <Class name="com.wlh.aop.factory.EnumOrNewFactory" x="-25" y="392">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="com.wlh.aop.factory.EnumFactory"/>
+        <Communication destinationClassName="com.wlh.ioc.AbstractBeanFactory"/>
+    </Class>
+    <Class name="com.wlh.aop.factory.EnumFactory" x="599" y="387">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="com.wlh.aop.factory.SingleFactory"/>
+    </Class>
+    <Class name="com.wlh.ioc.AbstractBeanFactory" x="-471" y="-7">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -9,7 +30,47 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="com.wlh.aop.proxy.ProxyChain" x="480" y="61">
+    <Class name="com.wlh.aop.factory.JavaUtilFactory" x="-217" y="293">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="com.wlh.ioc.AbstractBeanFactory"/>
+    </Class>
+    <Class name="com.wlh.aop.proxy.ProxyManager" x="937" y="330">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="com.wlh.aop.proxy.IProxyManager"/>
+    </Class>
+    <Class name="com.wlh.aop.proxy.AspectProxy" x="1398" y="262">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="com.wlh.aop.proxy.Proxy"/>
+        <Communication destinationClassName="com.wlh.aop.proxy.ProxyChain"/>
+    </Class>
+    <Class name="com.wlh.aop.proxy.Proxy" x="1328" y="174">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="com.wlh.aop.proxy.ProxyChain" x="1092" y="260">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -21,7 +82,7 @@
             endpointName="proxyList" kind="Simple"/>
         <Communication destinationClassName="com.wlh.aop.proxy.Proxy"/>
     </Class>
-    <Class name="com.wlh.aop.factory.AopFactory" x="545" y="437">
+    <Class name="com.wlh.aop.factory.AopFactory" x="850" y="42">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -32,7 +93,7 @@
         <Extension destinationClassName="com.wlh.ioc.AbstractBeanFactory"/>
         <Communication destinationClassName="com.wlh.aop.proxy.ProxyManager"/>
     </Class>
-    <Class name="com.wlh.ioc.AbstractBeanFactory" x="716" y="119">
+    <Class name="com.wlh.aop.factory.IocFactory" x="584" y="178">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -40,8 +101,10 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="com.wlh.aop.factory.AdapatBeanFactory"/>
+        <Communication destinationClassName="com.wlh.ioc.AbstractBeanFactory"/>
     </Class>
-    <Class name="com.wlh.aop.proxy.IProxyManager" x="39" y="453">
+    <Class name="com.wlh.aop.factory.CacheFactory" x="-28" y="158">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -49,18 +112,10 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="com.wlh.aop.factory.AdapatBeanFactory"/>
+        <Communication destinationClassName="com.wlh.ioc.AbstractBeanFactory"/>
     </Class>
-    <Class name="com.wlh.aop.proxy.ProxyManager" x="371" y="452">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Communication destinationClassName="com.wlh.aop.proxy.IProxyManager"/>
-    </Class>
-    <Class name="com.wlh.aop.factory.JavaUtilFactory" x="438" y="292">
+    <Class name="com.wlh.aop.factory.AdapatBeanFactory" x="268" y="29">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -69,8 +124,12 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Extension destinationClassName="com.wlh.ioc.AbstractBeanFactory"/>
+        <Association
+            destinationClassName="com.wlh.ioc.AbstractBeanFactory"
+            endpointName="beanFactory" kind="Simple"/>
+        <Communication destinationClassName="com.wlh.ioc.AbstractBeanFactory"/>
     </Class>
-    <Class name="com.wlh.aop.proxy.AspectProxy" x="25" y="217">
+    <Class name="com.wlh.aop.factory.SingleFactory" x="344" y="264">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -78,7 +137,16 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="com.wlh.aop.proxy.Proxy"/>
-        <Communication destinationClassName="com.wlh.aop.proxy.ProxyChain"/>
+        <Extension destinationClassName="com.wlh.aop.factory.AdapatBeanFactory"/>
+        <Communication destinationClassName="com.wlh.ioc.AbstractBeanFactory"/>
+    </Class>
+    <Class name="com.wlh.aop.proxy.IProxyManager" x="799" y="431">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
     </Class>
 </ClassDiagram>

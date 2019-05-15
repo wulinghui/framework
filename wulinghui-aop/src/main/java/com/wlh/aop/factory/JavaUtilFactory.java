@@ -8,11 +8,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.configuration2.beanutils.BeanCreationContext;
 import org.apache.commons.lang3.ClassUtils;
 
 import com.wlh.ioc.AbstractBeanFactory;
-import com.wlh.ioc.BeanBuildContext;
+import com.wlh.ioc.BeanEntity;
 import com.wlh.ioc.IocManage;
+import com.wlh.ioc.apache.BeanDeclaration;
 
 public class JavaUtilFactory extends AbstractBeanFactory{
 	static{
@@ -42,20 +44,34 @@ public class JavaUtilFactory extends AbstractBeanFactory{
 	
 
 	@Override
-	public Object createBean(BeanBuildContext bcc) throws RuntimeException {
-		Class<?> beanClass = bcc.getBeanClass();
-		Object[] parameter = bcc.getParameter();
+	public Object createBean0(BeanCreationContext bcc, BeanDeclaration beandel,
+			BeanEntity beanFactoryParameter) throws Exception {
+		Class<?> beanClass = beanFactoryParameter.getTypeToMatch();
+		Object[] parameter = beanFactoryParameter.getArgs();
 		if( beanClass != null &&  parameter != null ){
 			int flag = Integer.parseInt(parameter[0].toString());
 			if( ClassUtils.isAssignable(Map.class, beanClass) ){
-				newMap(flag);
+				return newMap(flag);
 			}else if( ClassUtils.isAssignable(List.class, beanClass) ){
-				newList(flag);
+				return newList(flag);
 			}else if( ClassUtils.isAssignable(Set.class, beanClass) ){
-				newSet(flag);
+				return newSet(flag);
 			}
 		}
 		return null;
 	}
-
+	@Override
+	public int getLevel(BeanDeclaration bcc) {
+		String beanClassName = bcc.getBeanClassName();
+		if( Map.class.getName().equals(beanClassName) ||  List.class.getName().equals(beanClassName) ||  Set.class.getName().equals(beanClassName)  ){
+			return MAX_LEVEL;
+		}
+		return -1;
+	}
+	@Override
+	public String getScopeFlag0(BeanDeclaration beandel,
+			BeanEntity beanFactoryParameter) throws RuntimeException {
+		Class<?> beanClass = beanFactoryParameter.getTypeToMatch();
+		return beandel.PROTOTYPE;
+	}
 }

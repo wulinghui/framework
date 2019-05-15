@@ -1,0 +1,2 @@
+### 整合
+Context继承AbstractConfiguration,AbstractConfiguration提供解析的方法太强大了。

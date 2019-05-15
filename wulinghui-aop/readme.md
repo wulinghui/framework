@@ -1,6 +1,6 @@
 ### 之前自己做的aop
 - [源码地址](https://gitee.com/wulinghui/java-Web)
-- 已经很好了，只不过有好多地方是自己实现的，这里仅仅是更多的利益commons组件。
+- 已经很好了，只不过有好多地方是自己实现的，这里仅仅是更多的利用commons组件。
 
 ### 他记
 - 本来想用Apache Commons classscan的，但是maven里面没有，也就是该不稳定。 

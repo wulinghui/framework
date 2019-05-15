@@ -1,16 +1,17 @@
 package com.wlh.config;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.SystemConfiguration;
 import org.apache.commons.configuration2.builder.BasicBuilderParameters;
 import org.apache.commons.configuration2.builder.BasicConfigurationBuilder;
+import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 
 import com.wlh.config.apache.SystemBuilderConfigFactory;
 import com.wlh.exception.ConvertRunException;
-import com.wlh.log.LogMSG;
 
 /**
  * @author wulinghui
@@ -72,6 +73,24 @@ public abstract class SystemConfig {
 	public static void setSystemConfig(IConfig systemConfig) {
 		SystemConfig.systemConfig = systemConfig;
 	}
-
 	
+	
+	public static <T> T to(Object src, Class<T> targetCls) {
+		return getConversionhandler().to(src, targetCls, getInterpolator());
+	}        
+	public static Object toArray(Object src, Class<?> elemClass) {
+		return getConversionhandler().toArray(src, elemClass, getInterpolator());
+	}
+	public static <T> void toCollection(Object src, Class<T> elemClass,
+			Collection<T> dest) {
+		getConversionhandler().toCollection(src, elemClass, getInterpolator(), dest);
+	}
+	public static ConversionHandler getConversionhandler() {
+		return ((AbstractConfiguration) SystemConfig
+				.get().getConfiguration()).getConversionHandler();
+	}
+	public static ConfigurationInterpolator getInterpolator() {
+		return ((AbstractConfiguration) SystemConfig
+				.get().getConfiguration()).getInterpolator();
+	}
 }

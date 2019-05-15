@@ -2,6 +2,8 @@ package com.wlh.ioc;
 
 import java.util.Map;
 
+import com.wlh.ioc.apache.BeanFactory;
+
 public interface BeanFactoryManage {
 //	Collection<BeanFactory> getAllFactory(); 之后可能需要用到
 	Map<String,BeanFactory> getAllFactory();
