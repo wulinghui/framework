@@ -12,21 +12,21 @@ import org.springframework.core.ResolvableType;
  * @author wulinghui
  * 主要用于适配spring的ResolvableType。
  * 话说这个类还是很厉害的。
+ * 同时提供给其它用户适配，和扩展。
+ * 我们这里扩展一个forString(String inner){方法。
  */
 public class TypeResolvable {
 	protected ResolvableType type;
-
 	public TypeResolvable(ResolvableType type) {
 		super();
 		this.type = type;
 	}
-
 	public TypeResolvable() {
 		super();
 	}
 
 	public Type getType() {
-		return type.getType();
+		return  type.getType() ;
 	}
 
 	public Class<?> getRawClass() {
@@ -38,7 +38,7 @@ public class TypeResolvable {
 	}
 
 	public Class<?> toClass() {
-		return type.toClass();
+		return type.toClass() ;
 	}
 
 	public boolean isInstance(Object obj) {
@@ -479,6 +479,5 @@ public class TypeResolvable {
 	 */
 	public static TypeResolvable forType( Type type,  TypeResolvable owner) {
 		return new TypeResolvable( ResolvableType.forType(type, owner.type) );
-		
 	}
 }

@@ -50,11 +50,11 @@ public class JavaUtilFactory extends AbstractBeanFactory{
 		Object[] parameter = beanFactoryParameter.getArgs();
 		if( beanClass != null &&  parameter != null ){
 			int flag = Integer.parseInt(parameter[0].toString());
-			if( ClassUtils.isAssignable(Map.class, beanClass) ){
+			if( ClassUtils.isAssignable(beanClass , Map.class) ){
 				return newMap(flag);
-			}else if( ClassUtils.isAssignable(List.class, beanClass) ){
+			}else if( ClassUtils.isAssignable( beanClass,   List.class) ){
 				return newList(flag);
-			}else if( ClassUtils.isAssignable(Set.class, beanClass) ){
+			}else if( ClassUtils.isAssignable( beanClass ,  Set.class ) ){
 				return newSet(flag);
 			}
 		}

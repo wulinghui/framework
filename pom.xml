@@ -34,9 +34,11 @@
 		<commons.jcs.jcache>2.2</commons.jcs.jcache>
 		<commons.pool2>2.4.2</commons.pool2>
 		<commons.configuration2>2.2</commons.configuration2>
+		<commons.lang3>3.6</commons.lang3>
 		<commons.dbutils>1.7</commons.dbutils>
 		<commons.text>1.5</commons.text>
 		<derby.version>10.14.2.0</derby.version>
+		<dbcp2.version>2.5.0</dbcp2.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -113,6 +115,13 @@
 				<!-- <scope>test</scope> -->
 			</dependency>
 			<!-- apache -->
+			<!-- https://mvnrepository.com/artifact/org.apache.openjpa/openjpa -->
+			<dependency>
+			    <groupId>org.apache.openjpa</groupId>
+			    <artifactId>openjpa</artifactId>
+			    <version>3.1.0</version>
+			</dependency>
+			
 			<!-- https://mvnrepository.com/artifact/org.apache.derby/derby -->
 			<dependency>
 				<groupId>org.apache.derby</groupId>
@@ -130,6 +139,17 @@
 				<artifactId>commons-configuration2</artifactId>
 				<version>${commons.configuration2}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.commons</groupId> 
+				<artifactId>commons-lang3</artifactId> 
+				<version>${commons.lang3}</version> 
+			</dependency> 
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-dbcp2</artifactId>
+    <version>${dbcp2.version}</version>
+</dependency>
 
 
 			<dependency>
@@ -229,16 +249,21 @@
 		<module>wulinghui-jdbc</module>
 		<module>wulinghui-dao</module>
 		<module>wulinghui-control</module>
+		<module>wulinghui-jpa</module>
 	</modules>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
+				<version>3.8.0</version>
+				<configuration>   
 					<source>1.8</source>
 					<target>1.8</target>
 					<encoding>UTF-8</encoding>
+					<compilerArgs>
+						<arg>-parameters</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>

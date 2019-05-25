@@ -1,28 +1,41 @@
 package com.wlh.dao;
 
+
 public class Stu {
 
-	String name;
-	String email;
-	public String getName() {
-		return name;
+	String STUNAME;
+	String EMAIL; 
+	int ID;
+	public String getSTUNAME() {
+		return STUNAME;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setSTUNAME(String sTUNAME) {
+		STUNAME = sTUNAME;
 	}
-	public String getEmail() {
-		return email;
+	public String getEMAIL() {
+		return EMAIL;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEMAIL(String eMAIL) {
+		EMAIL = eMAIL;
 	}
-	public Stu(String name, String email) {
+	public int getID() {
+		return ID;
+	}
+	public void setID(int iD) {
+		ID = iD;
+	}
+	public Stu(String sTUNAME, String eMAIL) {
 		super();
-		this.name = name;
-		this.email = email;
+		STUNAME = sTUNAME;
+		EMAIL = eMAIL;
+	}
+	@Override
+	public String toString() {
+		return "Stu [STUNAME=" + STUNAME + ", EMAIL=" + EMAIL + ", ID=" + ID
+				+ "]";
 	}
 	public Stu() {
 		super();
 	}
-
+     
 }

@@ -52,9 +52,6 @@ public class ConvertCompileException extends Exception {
 		throwable.printStackTrace(s);
 	}
 
-	public Throwable fillInStackTrace() {
-		return throwable.fillInStackTrace();
-	}
 
 	public StackTraceElement[] getStackTrace() {
 		return throwable.getStackTrace();

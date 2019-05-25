@@ -5,14 +5,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import com.wlh.dao.entity.ParameterIndex;
+import com.wlh.dao.plug.SqlTranslatorPlug;
+import com.wlh.dao.plug.SqlTranslatorPlugNamedPrepared;
 import com.wlh.util.MapUtils;
 
-public class SqlSessionNamedPrepared extends SqlSessionToMap {
+/**
+ * @author wulinghui
+ *SqlSessionNamedPrepared把单个的解析转化成
+ *插件解析SqlSessionSqlPlugs
+ */
+public class SqlSessionSqlPlugs extends DecorateSqlSession {
 
-	public SqlSessionNamedPrepared(SqlSession session) {
+	public SqlSessionSqlPlugs(SqlSession session) {
 		super(session);
 	}
 
@@ -51,7 +56,7 @@ public class SqlSessionNamedPrepared extends SqlSessionToMap {
 
 	protected void translatorWrap(SqlConfig config, Object parameter) {
 		String sql = getSql(config);
-		NamedPreparedTranslator translator = getNamedPreparedTranslator();
+		SqlTranslatorPlug translator = getSqlTranslatorPlug( config,  parameter);
 		sql = translator.translate(sql);
 		config.setConfig(config.SQL,sql);
 		//往后添加，但是有个问题，如果有冲突了的话将无法解决，引入ParameterIndex类解决。
@@ -71,8 +76,12 @@ public class SqlSessionNamedPrepared extends SqlSessionToMap {
 				addAll );
 	}
 
-	protected NamedPreparedTranslator getNamedPreparedTranslator() {
-		return new NamedPreparedTranslator('&', ' ');
+	protected SqlTranslatorPlug getSqlTranslatorPlug(SqlConfig config, Object parameter) {
+		SqlTranslatorPlug plug = config.getConfig(config.SQL_PLUG);
+		if( plug == null){
+			plug = new SqlTranslatorPlugNamedPrepared(config,parameter);
+			config.setConfig(config.SQL_PLUG, plug);
+		}
+		return plug;
 	}
-
 }

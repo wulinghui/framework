@@ -48,7 +48,7 @@ public class ProxyChain {
             methodResult = proxyList.get(proxyIndex++).doProxy(this);
         } else {
         	//
-            methodResult = methodProxy.invokeSuper(targetObject, methodParams);
+           methodResult = methodProxy.invokeSuper(targetObject, methodParams);
         }
         return methodResult;
     }

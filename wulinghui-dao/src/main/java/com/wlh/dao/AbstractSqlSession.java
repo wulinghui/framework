@@ -1,6 +1,8 @@
 package com.wlh.dao;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
@@ -14,7 +16,9 @@ import java.util.concurrent.Future;
 
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import com.wlh.beanutils.BeanUtils;
@@ -24,13 +28,17 @@ import com.wlh.dao.entity.Record;
 import com.wlh.dao.entity.TableData;
 import com.wlh.dao.entity.Value;
 import com.wlh.dao.handler.ColumnSetHandler;
+import com.wlh.dao.handler.ObjectHandler;
+import com.wlh.dao.handler.ObjectListHandler;
 import com.wlh.dao.handler.RecordHandler;
 import com.wlh.dao.handler.ResultSetHandlerOfJdbc;
+import com.wlh.dao.handler.ScalarHandler;
 import com.wlh.dao.handler.TableDataHandler;
 import com.wlh.dao.handler.ValueHandler;
 import com.wlh.exception.ConvertRunException;
 import com.wlh.util.Constant;
 import com.wlh.util.StringUtils;
+import com.wlh.util.TypeResolvable;
 
 public abstract class AbstractSqlSession implements SqlSession {
 	protected SqlConfig getSqlConfig(String configId) throws SQLException {
@@ -323,7 +331,8 @@ public abstract class AbstractSqlSession implements SqlSession {
 		}
 		Object object;
 		for (int i = 0; i < setKeys.length; i++) {
-			object = params.get( setKeys[i].getName() );
+			object = setKeys[i].getObj() == null ?
+					params.get( setKeys[i].getName() ) : setKeys[i].getObj();
 			if (object != null) {
 				if( StringUtils.isEmpty( setKeys[i].getSetMethodName() )  ){
 					stmt.setObject( setKeys[i].getIndex() , object);
@@ -344,8 +353,16 @@ public abstract class AbstractSqlSession implements SqlSession {
 	}
 	public void fillStatement(PreparedStatement stmt, ParameterIndex[] setKeys ,Object params)
 			throws SQLException {
-		try { 
-			fillStatement(stmt, setKeys, BeanUtils.describe(params));
+		try {
+			//在这里支持数组。
+			if( params.getClass().isArray()){
+				fillStatement(stmt, (Object[] )params);
+			//这里支持主键查询。 是基本类型或者是java.lang.包下的	
+			}else if( params.getClass().isPrimitive() || params.getClass().getName().startsWith("java.lang.") ){
+				fillStatement(stmt, new Object[]{params});
+			}else{
+				fillStatement(stmt, setKeys, BeanUtils.describe(params));
+			}
 		} catch (IllegalAccessException | InvocationTargetException
 				| NoSuchMethodException e) {
 			throw new ConvertRunException(e);
@@ -376,29 +393,62 @@ public abstract class AbstractSqlSession implements SqlSession {
 		ResultSetHandler rsh = config.getConfig(config.RESULT_SET_HANDLER);
 		
 		if(rsh == null){
-			if(ClassUtils.isAssignable(Value.class, returnClass)){
+			if(ClassUtils.isAssignable( returnClass , Value.class )){
 				rsh = (ResultSetHandler) new ValueHandler(config);
 				
-			}else if(ClassUtils.isAssignable(ColumnSet.class, returnClass)){
+			}else if(ClassUtils.isAssignable( returnClass ,  ColumnSet.class )){
 				rsh = new ColumnSetHandler(config);
 				
-			}else if(ClassUtils.isAssignable(Record.class, returnClass)){
+			}else if(ClassUtils.isAssignable( returnClass , Record.class )){
 				rsh = (ResultSetHandler) new RecordHandler(config);
 				
-			}else if(ClassUtils.isAssignable(TableData.class, returnClass)){
+			}else if(ClassUtils.isAssignable( returnClass,   TableData.class)){
 				rsh = (ResultSetHandler) new TableDataHandler(config);
 				
-			}else if(ClassUtils.isAssignable(ResultSet.class, returnClass)){
+			}else if(ClassUtils.isAssignable( returnClass , ResultSet.class )){
 				rsh = (ResultSetHandler) new ResultSetHandlerOfJdbc(config);
 				
 			}else{
-				
+				// 为了提供Spring jpa的方法的语法规定
+				TypeResolvable returnType = config.getConfig(config.RETURN_CLASS);
+				if(returnType != null){
+					Class toClass = returnType.toClass();
+					// 判断是不是Future。
+					if(  ClassUtils.isAssignable( toClass , Future.class) ){
+						config.setConfig(config.IS_FUTURE, true);
+						//
+						returnType = returnType.getGeneric(0);
+						toClass = returnType.toClass();
+					}
+					//是集合
+					if(     ClassUtils.isAssignable( toClass ,Collection.class  )  ){
+						returnType = returnType.getGeneric(0);
+						toClass = returnType.toClass();
+						//设置。
+						if( ClassUtils.isPrimitiveOrWrapper( toClass )){
+							rsh = new ColumnSetHandler(config);    
+						}else if (  ClassUtils.isAssignable( toClass  ,  Map.class ) ){
+							rsh =  new TableDataHandler(config);
+						}else{
+							rsh = new ObjectListHandler(config, toClass );
+						}
+					//基本类型和包装类
+					}else if( ClassUtils.isPrimitiveOrWrapper(returnType.toClass())){
+						rsh = new ScalarHandler(config);
+					//其它类型
+					}else{
+						rsh = new ObjectHandler(config,returnType.toClass());
+					}
+				}else{
+					assert 1==1 : "returnType is null , please check config.RETURN_CLASS";
+				}
 			}
-			
 			config.setConfig(config.RESULT_SET_HANDLER , rsh);
 		}
 	}
 	protected  ResultSetHandler getResultSetHandler(SqlConfig config) {
+		TypeResolvable returnType = config.getConfig(config.RETURN_CLASS);
+		wrapResultSetHandler(config, returnType.toClass() ); 
 		return config.getConfig(config.RESULT_SET_HANDLER);
 	}
 

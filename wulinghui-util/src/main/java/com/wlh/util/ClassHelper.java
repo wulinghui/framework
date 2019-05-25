@@ -13,13 +13,14 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.wlh.exception.ConvertRunException;
 import com.wlh.log.ILogger;
 import com.wlh.log.LogMSG;
 
-public class ClassHelper {
+public class ClassHelper extends ClassUtils{
 	
 	public static ILogger logger = LogMSG.getLogger();
 	/** 获得类在父类上实现的泛型。自己在强转一下。 

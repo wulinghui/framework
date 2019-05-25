@@ -3,6 +3,7 @@ package com.wlh.dao;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -10,6 +11,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +19,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import net.sf.cglib.core.TypeUtils;
+import net.sf.cglib.proxy.Enhancer;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.Test;
 import org.springframework.core.ResolvableType;
 
+import com.wlh.beanutils.BeanUtils;
 import com.wlh.config.SystemConfig;
 import com.wlh.dao.entity.ColumnSet;
 import com.wlh.dao.entity.Record;
@@ -30,6 +34,7 @@ import com.wlh.dao.entity.RecordImp;
 import com.wlh.dao.entity.TableData;
 import com.wlh.dao.entity.TableDataImp;
 import com.wlh.dao.entity.Value;
+import com.wlh.dao.plug.SqlSessionMethodInterceptor;
 import com.wlh.util.ClassHelper;
 import com.wlh.util.MapUtils;
 
@@ -63,7 +68,7 @@ public class SqlHelperTest {
 
 	@Test
 	public final void testBatchSqlConfigObjectArrayArray() throws Exception {
-		session = new SqlSessionNamedPrepared(new SqlSessionJDBC()) ;
+		session = new SqlSessionSqlPlugs(new SqlSessionJDBC()) ;
 		Future<TableData> selectTableData = session.selectTableData("select * from stu", MapUtils.EMPTY_MAP);
 		System.out.println(selectTableData.getClass()); 
 		TableData tableData = selectTableData.get();
@@ -72,7 +77,7 @@ public class SqlHelperTest {
 
 	@Test
 	public final void testBatchSqlConfigListOfMap() throws SQLException, Exception, ExecutionException { 
-		session =	new SqlSessionNamedPrepared(new SqlSessionFuture()) ;
+		session =	new SqlSessionSqlPlugs(new SqlSessionFuture()) ;
 		Future<TableData> selectTableData = session.selectTableData("select * from stu", MapUtils.EMPTY_MAP);
 	 	System.out.println(selectTableData.getClass()); 
 		TableData tableData = selectTableData.get();
@@ -126,7 +131,7 @@ public class SqlHelperTest {
 
 	@Test
 	public final void testUpdateStringObject() throws Exception {
-		session = new SqlSessionNamedPrepared(new SqlSessionJDBC()) ;
+		session = new SqlSessionSqlPlugs(new SqlSessionJDBC()) ;
 		Future<Record> selectRecord = session.selectRecord("select * from stu", MapUtils.EMPTY_MAP);
 //		Future<Record> selectRecord = SqlHelper.selectRecord("select * from stu", MapUtils.EMPTY_MAP);
 		System.out.println(selectRecord.get()); 
@@ -149,13 +154,14 @@ public class SqlHelperTest {
         // 获取成员泛型参数类型
         Field field = SqlHelperTest.class.getDeclaredField("list");
         ResolvableType resolvableType = ResolvableType.forField(field);
-        resolvableType = ResolvableType.forInstance(list);
-        ResolvableType.forMethodReturnType(null);
+//        resolvableType = ResolvableType.forInstance(list);
+//        ResolvableType.forMethodReturnType(null); 
         System.out.println(resolvableType);  
         System.out.println(resolvableType.getGeneric(0));
+        ResolvableType[] generics = resolvableType.getGeneric(0).getGenerics();
+        System.out.println(generics);
         System.out.println(resolvableType.getType());
         System.out.println(resolvableType.getGeneric(0).getType());
-        
         System.out.println(field.getType().getGenericSuperclass()); 
 //        TypeUtils.
     }
@@ -167,15 +173,15 @@ public class SqlHelperTest {
 		System.out.println(class1); 
 		String typeName = class1.getTypeName();
 		System.out.println(typeName);
-		TypeVariable<?> typeVariable = class1.getTypeParameters()[0];
-		System.out.println(typeVariable);
-		Class<? extends TypeVariable> class2 = typeVariable.getClass();
-		System.out.println(class2); 
+//		TypeVariable<?> typeVariable = class1.getTypeParameters()[0];
+//		System.out.println(typeVariable);
+//		Class<? extends TypeVariable> class2 = typeVariable.getClass();
+//		System.out.println(class2); 
 		
 		Type type = ((ParameterizedType)wo.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		 System.out.println(type);
-		 System.out.println( type.getClass());
-		 
+		System.out.println(type);   
+		System.out.println( type.getClass());   
+		
 		
 	}
 	List<Map<String, List<Object>>> list111 = new ArrayList<>();
@@ -224,37 +230,68 @@ public class SqlHelperTest {
 
 	@Test
 	public final void testSelectSqlConfigMapClassOfT() {
-		fail("Not yet implemented"); // TODO
+		String[] strs = new String[]{""};
+		
+		System.out.println((Object[])strs);
 	}
 
 	@Test
-	public final void testSelectSqlConfigObjectClassOfT() {
-		fail("Not yet implemented"); // TODO
-	}
+	public final void testSelectSqlConfigObjectClassOfT() throws SQLException {
 
+		List<Object[]> dataImp = new ArrayList<>();
+		Object[] recordImp = new Object[2];
+		for (int i = 0; i < 5; i++) {
+			recordImp[0] = "wlh"+i;
+			recordImp[1] = "objs"+i;
+			dataImp.add(recordImp);
+		}    
+		SqlHelper.batch0("insert into stu(stuname,email) values(?  , ? )", dataImp );
+	
+	}
+	
 	@Test
 	public final void testSelectStringObjectClassOfT() {
-		fail("Not yet implemented"); // TODO
-	}
+		StuDao create = (StuDao) Enhancer.create(StuDao.class, new SqlSessionMethodInterceptor());
+		Object find = create.find();  
+		System.out.println(find);  
+		System.out.println("============= ");  
+		find = create.findByStuname("one");
+		System.out.println(find);   
+		find = create.findById(101); 
+		System.out.println(find);   
+	}        
 
 	@Test
 	public final void testSelectStringMapClassOfT() {
-		fail("Not yet implemented"); // TODO
+		System.out.println( ClassUtils.isAssignable(Collection.class, List.class));
+		System.out.println( ClassUtils.isAssignable(List.class, Collection.class));
+	}      
+
+	@Test
+	public final void testSelectValueSqlConfigMap() throws Exception {
+		Map map = new HashMap<>();
+		map.put("STUNAME", "STUNAME");
+		map.put("EMAIL", "EMAIL");
+		map.put("ID", "111");
+		Stu stu = new Stu();    
+		BeanUtils.populate(stu, map);
+		System.out.println(stu); 
 	}
 
 	@Test
-	public final void testSelectValueSqlConfigMap() {
-		fail("Not yet implemented"); // TODO
+	public final void testSelectValueSqlConfigObject() throws Exception, ExecutionException {
+		StuDao create = (StuDao) Enhancer.create(StuDao.class, new SqlSessionMethodInterceptor());
+		Object find = create.findById(101); 
+		System.out.println(find);      
+		find = create.findByEmail("one@test.com").get();  
+		System.out.println(find);     
 	}
 
 	@Test
-	public final void testSelectValueSqlConfigObject() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testSelectValueStringObject() {
-		fail("Not yet implemented"); // TODO
+	public final void testSelectValueStringObject() throws Throwable {  
+		StuDao create = (StuDao) Enhancer.create(StuDao.class, new SqlSessionMethodInterceptor());    
+		Object find  = create.findByEmail("one@test.com").get();         
+		System.out.println(find);                 
 	}
 
 	@Test

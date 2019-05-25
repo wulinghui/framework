@@ -1,4 +1,4 @@
-package com.wlh.dao;
+package com.wlh.dao.plug;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -9,46 +9,44 @@ import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.translate.CharSequenceTranslator;
 
 import com.wlh.beanutils.BeanUtils;
+import com.wlh.dao.SqlConfig;
 import com.wlh.dao.entity.ParameterIndex;
 import com.wlh.exception.ConvertRunException;
 
-/**
- * @author wulinghui
- * 该类必须先执行translate方法。
- */
-@Deprecated
-public class NamedPreparedTranslator extends CharSequenceTranslator {
-	private final char prefix;
-	private final char suffix;
-	private final char out;
+public class SqlTranslatorPlugNamedPrepared extends SqlTranslatorPlug{
+	public static final char prefix = '&';
+	public static final char suffix = ' ';
+	public static final char out = '?';
+
 	private final List<ParameterIndex> namedPrepared = new ArrayList<ParameterIndex>(10);
 //	private final AtomicInteger currentIndex = new AtomicInteger(1);
 	private int currentIndex = 1;
-	public NamedPreparedTranslator(char prefix, char suffix, char out) {
-		super();
-		this.prefix = prefix;
-		this.suffix = suffix;
-		this.out = out;
-	} 
-	public NamedPreparedTranslator(char prefix, char suffix) {
-		this(prefix, suffix, '?');
+	
+	public SqlTranslatorPlugNamedPrepared(SqlConfig config, Object para) {
+		super(config, para);
 	}
-
+	/* (non-Javadoc)
+	 * @see com.wlh.dao.plug.zzz#getNamedPrepared()
+	 */
+	@Override
 	public List<ParameterIndex> getNamedPrepared() {
 		return namedPrepared;
 	}
+	/* (non-Javadoc)
+	 * @see com.wlh.dao.plug.zzz#getNamedPreparedArray()
+	 */
+	@Override
 	public ParameterIndex[] getNamedPreparedArray() {
 		ParameterIndex [] keyArray = new ParameterIndex[this.namedPrepared.size()];
 		namedPrepared.toArray(keyArray);
 		return keyArray;
 	}
-	/**从map里面找到对应namedPrepared的值放入数组中。
-	 * @param map
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.wlh.dao.plug.zzz#getParams(java.util.Map)
 	 */
+	@Override
 	public Object[] getParams(Map<String,Object>  map){
 		if(map == null ) return ArrayUtils.EMPTY_OBJECT_ARRAY;
 		Object [] valueArray = new Object[currentIndex];
@@ -59,6 +57,10 @@ public class NamedPreparedTranslator extends CharSequenceTranslator {
 		}
 		return valueArray;
 	}
+	/* (non-Javadoc)
+	 * @see com.wlh.dao.plug.zzz#getParams(java.lang.Object)
+	 */
+	@Override
 	public Object[] getParams(Object bean){
 		try {
 			Map<String, String> describe = BeanUtils.describe(bean);
@@ -68,9 +70,16 @@ public class NamedPreparedTranslator extends CharSequenceTranslator {
 			throw new ConvertRunException(e);
 		}
 	}
+	/* (non-Javadoc)
+	 * @see com.wlh.dao.plug.zzz#getParameterIndex()
+	 */
 	@Override
-	public int translate(CharSequence input, int index, Writer out)
-			throws IOException {
+	public int getParameterIndex() {
+		return currentIndex;
+	}
+	@Override
+	protected int translate(SqlConfig config, CharSequence input, int index,
+			Writer out, Object para) throws IOException {
 		if(input.charAt(index) == this.out ){
 			currentIndex++;
 			return 0;
@@ -91,9 +100,6 @@ public class NamedPreparedTranslator extends CharSequenceTranslator {
 			}while(index < input.length());
 		}
 		return 0;
-	}
-	public int getParameterIndex() {
-		return currentIndex;
 	}
 	
 }

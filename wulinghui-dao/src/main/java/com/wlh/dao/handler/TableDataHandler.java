@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import com.wlh.dao.SqlConfig;
 import com.wlh.dao.entity.ColumnSet;
 import com.wlh.dao.entity.Record;
+import com.wlh.dao.entity.TableData;
 import com.wlh.dao.entity.TableDataImp;
 
 /**
@@ -13,12 +14,11 @@ import com.wlh.dao.entity.TableDataImp;
  * @see org.apache.commons.dbutils.handlers.MapListHandler
  */
 public class TableDataHandler extends AbstractHandler<ColumnSet<Record>> {
-	private final ColumnSetHandler<Record> handler;
+	private final ColumnSetHandler handler;
 			
 	public TableDataHandler(SqlConfig config) {
 		super(config);
-		handler = new ColumnSetHandler<Record>(config){
-			@Override
+		handler = new ColumnSetHandler(config){
 			protected Record handleRow(ResultSet rs) throws SQLException {
 				return RecordHandler.toRecord(this, rs);
 			}
@@ -26,7 +26,7 @@ public class TableDataHandler extends AbstractHandler<ColumnSet<Record>> {
 	}
 	
 	@Override
-	public ColumnSet<Record> handle(ResultSet rs) throws SQLException {
+	public TableData handle(ResultSet rs) throws SQLException {
 		return new TableDataImp(handler.handle(rs));
 	}
 

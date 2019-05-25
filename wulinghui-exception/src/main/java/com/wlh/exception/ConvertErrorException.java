@@ -52,9 +52,6 @@ public class ConvertErrorException extends Error {
 		throwable.printStackTrace(s);
 	}
 
-	public Throwable fillInStackTrace() {
-		return throwable.fillInStackTrace();
-	}
 
 	public StackTraceElement[] getStackTrace() {
 		return throwable.getStackTrace();

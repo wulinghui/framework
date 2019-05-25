@@ -25,6 +25,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.wlh.dao.handler.ResultSetHandlerOfJdbc;
+import com.wlh.dao.plug.SqlTranslatorPlug;
+import com.wlh.dao.plug.SqlTranslatorPlugNamedPrepared;
 import com.wlh.exception.ConvertRunException;
 import com.wlh.util.Constant;
 import com.wlh.util.MapUtils;
@@ -54,19 +56,19 @@ public  class NamedPreparedSqlSession extends AbstractSqlSession {
 
 	@Override
 	public int update(SqlConfig config, Map parameter) throws SQLException {
-		NamedPreparedTranslator translator = getNamedPreparedTranslator();
+		SqlTranslatorPlug translator = getSqlTranslatorPlug( config ,parameter);
 		return this.execteUpdate(config, translator.translate(getSql(config)), translator.getParams(parameter));
 	}
 
 	@Override
 	public int update(SqlConfig config, Object parameter) throws SQLException {
-		NamedPreparedTranslator translator = getNamedPreparedTranslator();
+		SqlTranslatorPlug translator = getSqlTranslatorPlug( config ,parameter);
 		return this.execteUpdate( config,translator.translate(getSql(config)), translator.getParams(parameter));
 	}
 
-	protected NamedPreparedTranslator getNamedPreparedTranslator() {
-		return new NamedPreparedTranslator('&', ' ');
-	}
+	protected SqlTranslatorPlug getSqlTranslatorPlug(SqlConfig config, Object parameter) {
+		return new SqlTranslatorPlugNamedPrepared(config , parameter);
+	} 
 
 	@Override
 	public <T> Future<T> select(SqlConfig config, Map parameter) throws SQLException {
@@ -74,9 +76,8 @@ public  class NamedPreparedSqlSession extends AbstractSqlSession {
 		ResultSetHandler<T> rsh = getResultSetHandler(config);
 		Boolean isFuture = config.getConfig(config.IS_FUTURE);
 		if( MapUtils.isNotEmpty(parameter)){
-			NamedPreparedTranslator translator = getNamedPreparedTranslator();
+			SqlTranslatorPlug translator = getSqlTranslatorPlug( config ,parameter);
 			if( isFuture == null || isFuture){
-				
 				return exeFuture(config, parameter, rsh, translator);
 			}else{
 				return new NoFutureImp<T>(execteQuery(config,translator.translate(getSql(config)), rsh,translator.getParams(parameter)));
@@ -100,7 +101,7 @@ public  class NamedPreparedSqlSession extends AbstractSqlSession {
 	}
 
 	protected <T> Future<T> exeFuture(SqlConfig config, Map parameter,
-			ResultSetHandler<T> rsh, NamedPreparedTranslator translator) {
+			ResultSetHandler<T> rsh, SqlTranslatorPlug translator) {
 		Callable<T> call = new Callable<T>(){
 			public T call() throws Exception {
 				return execteQuery(config,translator.translate(getSql(config)), rsh,translator.getParams(parameter));
@@ -113,7 +114,7 @@ public  class NamedPreparedSqlSession extends AbstractSqlSession {
 	public <T> Future<T> select(SqlConfig config, Object parameter) throws SQLException {
 		ResultSetHandler<T> rsh = getResultSetHandler(config);
 		if( Objects.nonNull(parameter)){
-			NamedPreparedTranslator translator = getNamedPreparedTranslator();
+			SqlTranslatorPlug translator = getSqlTranslatorPlug( config ,parameter);
 			return new NoFutureImp<T>(execteQuery(config,translator.translate(getSql(config)), rsh,translator.getParams(parameter)));
 		}else{
 			return new NoFutureImp<T>(execteQuery(config,getSql(config), rsh, ArrayUtils.EMPTY_OBJECT_ARRAY));
@@ -177,10 +178,10 @@ public  class NamedPreparedSqlSession extends AbstractSqlSession {
 		
         PreparedStatement stmt = null;
         int[] rows = null;
-        NamedPreparedTranslator translator = null;
+        SqlTranslatorPlug translator = null;
         try {
         	if(istranslator){
-        		translator = getNamedPreparedTranslator();
+        		translator = getSqlTranslatorPlug( config ,params);
         		stmt = this.prepareStatement(conn, translator.translate(sql));
         	}else{
         		stmt = this.prepareStatement(conn,sql);

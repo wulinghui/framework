@@ -28,7 +28,7 @@ public class DbUtilsTest {
 	@Test
 	public  void main() {
 //		DbUtils.close(stmt);
-		 QueryRunner queryRunner = new QueryRunner();
+		QueryRunner queryRunner = new QueryRunner();
 //		 queryRunner.insert(sql, rsh, params)
 //		 queryRunner.update(conn, "INSERT INTO persons(name, age) VALUES(?, ?)", "阡陌", 24);
 //		 StringEscapeUtils.unescapeHtml4(input)

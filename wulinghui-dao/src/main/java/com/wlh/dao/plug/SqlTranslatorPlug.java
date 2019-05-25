@@ -1,10 +1,14 @@
-package com.wlh.dao;
+package com.wlh.dao.plug;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.text.translate.CharSequenceTranslator;
 
+import com.wlh.dao.SqlConfig;
+import com.wlh.dao.entity.ParameterIndex;
 import com.wlh.log.ILogger;
 import com.wlh.log.LogMSG;
 
@@ -17,14 +21,26 @@ import com.wlh.log.LogMSG;
  */
 public abstract class SqlTranslatorPlug extends CharSequenceTranslator {
 	public static ILogger logger = LogMSG.getLogger();
-	
+
+	public abstract List<ParameterIndex> getNamedPrepared();
+
+	public abstract ParameterIndex[] getNamedPreparedArray();
+
+	/**从map里面找到对应namedPrepared的值放入数组中。
+	 * @param map
+	 * @return
+	 */
+	public abstract Object[] getParams(Map<String, Object> map);
+
+	public abstract Object[] getParams(Object bean);
+
+	public abstract int getParameterIndex();
+
+
 	protected SqlConfig config;
-	protected SqlTranslatorPlug plug;
 	protected Object para;
-	public SqlTranslatorPlug(SqlConfig config, SqlTranslatorPlug plug,
-			Object para) {
+	public SqlTranslatorPlug(SqlConfig config, Object para) {
 		this.config = config;
-		this.plug = plug;
 		this.para = para;
 	}
 	@Override
@@ -32,8 +48,6 @@ public abstract class SqlTranslatorPlug extends CharSequenceTranslator {
 			throws IOException {
 		return translate( config , input, index, out ,para);
 	}
-	protected int translate(SqlConfig config , CharSequence input, int index, Writer out , Object para)
-			throws IOException {
-		return plug.translate(config, input, index, out, para);
-	}
+	protected abstract int translate(SqlConfig config , CharSequence input, int index, Writer out , Object para)
+			throws IOException;
 }

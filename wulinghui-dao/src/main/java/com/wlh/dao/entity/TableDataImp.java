@@ -15,11 +15,10 @@ import java.util.stream.Stream;
 public class TableDataImp  implements TableData{
 	List<Record> list;
 	
-	public TableDataImp(List<Record> list) {
+	public TableDataImp(List list) {
 		super();
 		this.list = list;
 	}
-	
 	@Override
 	public String toString() {
 		return list.toString();
@@ -163,5 +162,7 @@ public class TableDataImp  implements TableData{
 		if( record == null) return null;
 		return record.get(name);
 	}
+
+	
 	
 }

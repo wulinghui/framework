@@ -49,7 +49,7 @@ public class ControllerServlert extends HttpServlet{
 	                        }
 	                    }
 	                }
-	               if( ClassUtils.isAssignable(HandlerInterceptor.class, controllerClass) ){
+	               if( ClassUtils.isAssignable( controllerClass, HandlerInterceptor.class ) ){
 	            	   handlerInterceptorList.add( (HandlerInterceptor) IocManage.getBean(controllerClass) );
 	               }
 	            }
@@ -74,7 +74,7 @@ public class ControllerServlert extends HttpServlet{
 		Class<?>[] parameterTypes = method.getParameterTypes();
 //		if(parameterTypes.length==0) return false;
 		if(Objects.isNull(parameterTypes) || parameterTypes.length!=1) return false;
-		return method.getName().startsWith("txn") && ClassUtils.isAssignable(TxnContext.class, parameterTypes[0]);
+		return method.getName().startsWith("txn") && ClassUtils.isAssignable( parameterTypes[0], TxnContext.class );
 	}
 	/**对应执行的路径是类名/1234.反射的后缀
 	 */

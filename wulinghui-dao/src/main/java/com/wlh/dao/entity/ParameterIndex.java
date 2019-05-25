@@ -12,17 +12,24 @@ public class ParameterIndex {
 	String name;
 	// see com.wlh.dao.AbstractSqlSession.fillStatement(PreparedStatement, ParameterIndex[], Map)
 	String setMethodName;
+	//如果他有值就优先取他，否则去Map里面取name对应的值。
+	Object obj; // setObject(index,obj);
 	
+	public ParameterIndex(int index, String name, String setMethodName,
+			Object obj) {
+		super();
+		this.index = index;
+		this.name = name;
+		this.setMethodName = setMethodName;
+		this.obj = obj;
+	}
 	/**
 	 * @param index
 	 * @param name
 	 * @param setMethodName 为fillStatement选择方法。
 	 */
 	public ParameterIndex(int index, String name, String setMethodName) {
-		super();
-		this.index = index;
-		this.name = name;
-		this.setMethodName = setMethodName;
+		this(index, name, setMethodName, null);
 	}
 	public ParameterIndex(int index, String name) {
 		this(index, name, "");
@@ -48,10 +55,16 @@ public class ParameterIndex {
 	public void setSetMethodName(String setMethodName) {
 		this.setMethodName = setMethodName;
 	}
+	public Object getObj() {
+		return obj;
+	}
+	public void setObj(Object obj) {
+		this.obj = obj;
+	}
 	@Override
 	public String toString() {
 		return "ParameterIndex [index=" + index + ", name=" + name
-				+ ", setMethodName=" + setMethodName + "]";
+				+ ", setMethodName=" + setMethodName + ", obj=" + obj + "]";
 	}
 	
 }

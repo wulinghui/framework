@@ -9,6 +9,8 @@ import net.sf.cglib.proxy.MethodProxy;
 
 import com.wlh.aop.entity.TestA;
 import com.wlh.config.WrapEntity;
+import com.wlh.log.ILogger;
+import com.wlh.log.LogMSG;
 
 /**
  *代理管理器
@@ -17,22 +19,29 @@ import com.wlh.config.WrapEntity;
  * `SystemConfig.get().setSingle( this );`
  */
 public abstract class ProxyManager {
-	private static WrapEntity<IProxyManager> entity = new WrapEntity<IProxyManager>(new IProxyManager(){
-		
-		public  <T> T createProxy(final Class<?> targetClass, final List<Proxy> proxyList) {
-	    	Enhancer enhancer = new Enhancer();
-	    	
+	private final static ILogger logger = LogMSG.getLogger();
+	
+	
+	private final static WrapEntity<IProxyManager> entity = WrapEntity.getWrapEntityBySystemConfig(IProxyManager.class);
+	static{
+		if(entity.isEmpty()){
+			entity.setWrapObj(new IProxyManager(){
+				public  <T> T createProxy(final Class<?> targetClass, final List<Proxy> proxyList) {
+//					Enhancer enhancer = new Enhancer();
 //	    	enhancer.setCallback(callback);
 //	    	enhancer.create();
-	    	//静态方法创建代理对象。
-	        return (T) Enhancer.create(targetClass, new MethodInterceptor() {
-	            public Object intercept(Object targetObject, Method targetMethod, Object[] methodParams, MethodProxy methodProxy) throws Throwable {
-	            	//将所有参数下移至ProxyChain的属性。
-	                return new ProxyChain(targetClass, targetObject, targetMethod, methodProxy, methodParams, proxyList).doProxyChain();
-	            }
-	        });
-	    }
-	}).putSystemConfig();
+					
+					//静态方法创建代理对象。
+					return (T) Enhancer.create(targetClass, new MethodInterceptor() {
+						public Object intercept(Object targetObject, Method targetMethod, Object[] methodParams, MethodProxy methodProxy) throws Throwable {
+							//将所有参数下移至ProxyChain的属性。
+							return new ProxyChain(targetClass, targetObject, targetMethod, methodProxy, methodParams, proxyList).doProxyChain();
+						}
+					});
+				}
+			});
+		}
+	}
     
 	
 	public static <T> T createProxy(final Class<?> targetClass, final List<Proxy> proxyList) {
@@ -45,12 +54,7 @@ public abstract class ProxyManager {
 		try {
 			newInstance = class1.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (newInstance instanceof TestA) {
-			TestA new_name = (TestA) newInstance;
-			new_name.aaa();
+			logger.debug(e);
 		}
 		return class1;
 	}

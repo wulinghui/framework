@@ -20,15 +20,15 @@ import com.wlh.dao.entity.ValueImp;
  * @author wulinghui
  * @see org.apache.commons.dbutils.handlers.ColumnListHandler
  */
-public class ColumnSetHandler<T> extends AbstractHandler<ColumnSet<T>> {
+public class ColumnSetHandler extends AbstractHandler<ColumnSet<Object>> {
 
 	public ColumnSetHandler(SqlConfig config) {
 		super(config);
 	}
 
 	@Override
-	public ColumnSet<T> handle(ResultSet rs) throws SQLException {
-		ColumnSet<T> rows = new ColumnSetImp(new ArrayList<T>());
+	public ColumnSet<Object> handle(ResultSet rs) throws SQLException {
+		ColumnSet<Object> rows = new ColumnSetImp(new ArrayList<Object>(),Object.class);
 		int i = 0;
 		Integer columnMax = this.getColumnMax();
 		int[] rowIndexs = getRowIndexs();
@@ -45,8 +45,8 @@ public class ColumnSetHandler<T> extends AbstractHandler<ColumnSet<T>> {
 		return rows;
 	}
 
-	protected T handleRow(ResultSet rs) throws SQLException {
-		return (T) ValueHandler.toValue(this, rs);
+	protected Object handleRow(ResultSet rs) throws SQLException {
+		return  ValueHandler.toValue(this, rs);
 	}
 
 }

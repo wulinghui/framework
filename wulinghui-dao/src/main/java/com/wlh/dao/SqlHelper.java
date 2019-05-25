@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.apache.commons.lang3.ClassUtils;
-
-import com.wlh.aop.factory.ClassUtilTestTest;
 import com.wlh.config.WrapEntity;
 import com.wlh.dao.entity.ColumnSet;
 import com.wlh.dao.entity.Record;
@@ -21,7 +18,7 @@ public  abstract class SqlHelper {
 	public  static final WrapEntity<SqlSession> entity = WrapEntity.getWrapEntityBySystemConfig(SqlSession.class);
 	static{
 		if( entity.isEmpty() ){
-			SqlSession session = new SqlSessionNamedPrepared(
+			SqlSession session = new SqlSessionSqlPlugs(
 					new SqlSessionFuture() );
 			entity.setWrapObj(session);
 		}
@@ -79,20 +76,20 @@ public  abstract class SqlHelper {
 			throws SQLException {
 		return getSqlSession().selectResultSet(configId, parameter);
 	}
-	public static <T> Future<T> select(SqlConfig config, Map parameter,
-			Class<T> returnClass) throws SQLException {
+	public static <T> Future<T> select(SqlConfig config, Map parameter
+			) throws SQLException {
 		return getSqlSession().select(config, parameter);
 	}
-	public static <T> Future<T> select(SqlConfig config, Object parameter,
-			Class<T> returnClass) throws SQLException {
+	public static <T> Future<T> select(SqlConfig config, Object parameter
+			) throws SQLException {
 		return getSqlSession().select(config, parameter);
 	}
-	public static <T> Future<T> select(String configId, Object parameter,
-			Class<T> returnClass) throws SQLException {
+	public static <T> Future<T> select(String configId, Object parameter
+			) throws SQLException {
 		return getSqlSession().select(configId, parameter);
 	}
-	public static <T> Future<T> select(String configId, Map parameter,
-			Class<T> returnClass) throws SQLException {
+	public static <T> Future<T> select(String configId, Map parameter
+			) throws SQLException {
 		return getSqlSession().select(configId, parameter);
 	}
 	public static Future<Value> selectValue(SqlConfig config, Map parameter)

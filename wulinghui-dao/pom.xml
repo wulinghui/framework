@@ -35,10 +35,10 @@
 			<artifactId>derby</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.derby/derbyclient -->
-<dependency>
-    <groupId>org.apache.derby</groupId>
-    <artifactId>derbyclient</artifactId>
-</dependency>
-		
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derbyclient</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>

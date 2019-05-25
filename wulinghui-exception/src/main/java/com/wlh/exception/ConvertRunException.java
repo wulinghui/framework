@@ -7,8 +7,8 @@ public class ConvertRunException extends RuntimeException {
 	
 	Throwable throwable;
 
-	public ConvertRunException(Throwable throwable) {
-		super();
+	public ConvertRunException(Throwable throwable) { 
+		super();  
 		this.throwable = throwable;
 	}
 
@@ -52,9 +52,6 @@ public class ConvertRunException extends RuntimeException {
 		throwable.printStackTrace(s);
 	}
 
-	public Throwable fillInStackTrace() {
-		return throwable.fillInStackTrace();
-	}
 
 	public StackTraceElement[] getStackTrace() {
 		return throwable.getStackTrace();
