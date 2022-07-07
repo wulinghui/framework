@@ -33,7 +33,7 @@
 		<commons.beanutils>1.9.3</commons.beanutils>
 		<commons.jcs.jcache>2.2</commons.jcs.jcache>
 		<commons.pool2>2.4.2</commons.pool2>
-		<commons.configuration2>2.7</commons.configuration2>
+		<commons.configuration2>2.8.0</commons.configuration2>
 		<commons.lang3>3.6</commons.lang3>
 		<commons.dbutils>1.7</commons.dbutils>
 		<commons.text>1.5</commons.text>
